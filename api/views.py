@@ -13,27 +13,47 @@ import math
 @api_view(['POST'])
 def add(request):
   if request.method == 'POST':
-    operands = [float(num) for num in request.data["operands"]]
-    result = sum(operands)
-    return Response(data=result, status=status.HTTP_200_OK)
+    try:
+      operands = [float(num) for num in request.data["operands"]]
+      result = sum(operands)
+      return Response(data=result, status=status.HTTP_200_OK)
+    except ValueError:
+      return Response(data="Operands must be numbers", status=status.HTTP_400_BAD_REQUEST)
+    except:
+      return Response(data="Invalid request", status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 def divide(request):
   if request.method == 'POST':
-    operands = [float(num) for num in request.data["operands"]]
-    result = operands[0]
-    for i in range(1, len(operands)):
-      result = result / operands[i]
-    return Response(content_type="application/json", data=result, status=status.HTTP_200_OK)
+    try:
+      operands = [float(num) for num in request.data["operands"]]
+      result = operands[0]
+      for i in range(1, len(operands)):
+        result = result / operands[i]
+      return Response(data=result, status=status.HTTP_200_OK)
+    except ValueError:
+      return Response(data="Operands must be numbers", status=status.HTTP_400_BAD_REQUEST)
+    except IndexError:
+      return Response(data="You must send at least one operand", status=status.HTTP_400_BAD_REQUEST)
+    except:
+      return Response(data="Invalid request", status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def multiply(request):
   if request.method == 'POST':
-    operands = [float(num) for num in request.data["operands"]]
-    result = operands[0]
-    for i in range(1, len(operands)):
-      result = result * operands[i]
-    return Response(data=result, status=status.HTTP_200_OK)
+    try:
+      operands = [float(num) for num in request.data["operands"]]
+      result = operands[0]
+      for i in range(1, len(operands)):
+        result = result * operands[i]
+      return Response(data=result, status=status.HTTP_200_OK)
+    except ValueError:
+      return Response(data="Operands must be numbers", status=status.HTTP_400_BAD_REQUEST)
+    except IndexError:
+      return Response(data="You must send at least one operand", status=status.HTTP_400_BAD_REQUEST)
+    except:
+      return Response(data="Invalid request", status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def random_string(request):
@@ -44,16 +64,28 @@ def random_string(request):
 @api_view(['POST'])
 def square_root(request):
   if request.method == 'POST':
-    operand = float(request.data["operands"][0])
-    result = math.sqrt(operand)
-    return Response(data=result, status=status.HTTP_200_OK)
+    try:
+      operand = float(request.data["operands"][0])
+      result = math.sqrt(operand)
+      return Response(data=result, status=status.HTTP_200_OK)
+    except IndexError:
+      return Response(data="You must send at least one operand", status=status.HTTP_400_BAD_REQUEST)
+    except:
+      return Response(data="Operand must be a non-negative number", status=status.HTTP_400_BAD_REQUEST)    
 
 @api_view(['POST'])
 def subtract(request):
   if request.method == 'POST':
-    operands = [float(num) for num in request.data["operands"]]
-    result = operands[0]
-    for i in range(1, len(operands)):
-      result = result - operands[i]
-    return Response(data=result, status=status.HTTP_200_OK)
+    try:
+      operands = [float(num) for num in request.data["operands"]]
+      result = operands[0]
+      for i in range(1, len(operands)):
+        result = result - operands[i]
+      return Response(data=result, status=status.HTTP_200_OK)
+    except ValueError:
+      return Response(data="Operands must be numbers", status=status.HTTP_400_BAD_REQUEST)
+    except IndexError:
+      return Response(data="You must send at least one operand", status=status.HTTP_400_BAD_REQUEST)
+    except:
+      return Response(data="Invalid request", status=status.HTTP_400_BAD_REQUEST)
 
