@@ -1,3 +1,4 @@
+import logging
 import math
 import requests
 from rest_framework import status
@@ -47,6 +48,36 @@ def divide(request):
       return Response(data="You must send at least one operand", status=status.HTTP_400_BAD_REQUEST)
     except:
       return Response(data="Invalid request", status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def login(request):
+  if request.method == 'POST':
+    try:
+      credentials = request.data
+      user = User.objects.filter(username=credentials["username"], password=credentials["password"])
+      if len(user) == 1:
+        serializer = UserSerializer(user[0])
+        # Set the user status as User.ACTIVE
+        return Response(data=serializer.data["username"], status=status.HTTP_200_OK)
+      else:
+        return Response(data="Incorrect username or password", status=status.HTTP_400_BAD_REQUEST)
+    except:
+      return Response(data="Invalid log in", status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def logout(request):
+  if request.method == 'POST':
+    try:
+      credentials = request.data
+      user = User.objects.filter(username=credentials["username"])
+      if len(user) == 1:
+        serializer = UserSerializer(user[0])
+        # Set the user status as User.INACTIVE
+        return Response(data=serializer.data["username"], status=status.HTTP_200_OK)
+      else:
+        return Response(data="Could not log out of requested account", status=status.HTTP_400_BAD_REQUEST)
+    except:
+      return Response(data="An error occurred while attempting to log out", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
 @authentication_classes([BasicAuthentication])
