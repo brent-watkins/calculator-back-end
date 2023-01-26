@@ -1,4 +1,3 @@
-import logging
 import math
 import requests
 from rest_framework import status
@@ -17,8 +16,8 @@ from .serializers import UserSerializer
 #   be returned if the user does not have credit available.
 
 @api_view(['POST'])
-@authentication_classes([BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([BasicAuthentication])
+# @permission_classes([IsAuthenticated])
 def add(request):
   if request.method == 'POST':
     try:
@@ -32,8 +31,8 @@ def add(request):
 
 
 @api_view(['POST'])
-@authentication_classes([BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([BasicAuthentication])
+# @permission_classes([IsAuthenticated])
 def divide(request):
   if request.method == 'POST':
     try:
@@ -80,8 +79,8 @@ def logout(request):
       return Response(data="An error occurred while attempting to log out", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
-@authentication_classes([BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([BasicAuthentication])
+# @permission_classes([IsAuthenticated])
 def multiply(request):
   if request.method == 'POST':
     try:
@@ -98,8 +97,8 @@ def multiply(request):
       return Response(data="Invalid request", status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
-@authentication_classes([BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([BasicAuthentication])
+# @permission_classes([IsAuthenticated])
 def random_string(request):
   if request.method == 'GET':
     result = requests.get('https://www.random.org/strings/?num=1&len=20&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new')
@@ -120,8 +119,8 @@ def register(request):
       return Response(data="Unable to register account", status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
-@authentication_classes([BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([BasicAuthentication])
+# @permission_classes([IsAuthenticated])
 def square_root(request):
   if request.method == 'POST':
     try:
@@ -134,8 +133,8 @@ def square_root(request):
       return Response(data="Operand must be a non-negative number", status=status.HTTP_400_BAD_REQUEST)    
 
 @api_view(['POST'])
-@authentication_classes([BasicAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([BasicAuthentication])
+# @permission_classes([IsAuthenticated])
 def subtract(request):
   if request.method == 'POST':
     try:
