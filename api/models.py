@@ -11,7 +11,7 @@ class User(models.Model):
   balance = models.DecimalField(decimal_places=2, default=10.00, max_digits=8)
   password = models.CharField(max_length=256)
   status = models.CharField(choices=STATUS_CHOICES, max_length=1)
-  username = models.EmailField()
+  username = models.EmailField(unique=True)
 
 
 class Operation(models.Model):
