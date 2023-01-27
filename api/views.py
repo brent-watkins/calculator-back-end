@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import User, Operation
+from .models import User, Operation, Record
 from .serializers import UserSerializer, OperationSerializer, RecordSerializer
 
 def _create_record(operation, result, user):
@@ -175,6 +175,35 @@ def random_string(request):
     except:
       return Response(data="Invalid request", status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['POST', 'PUT'])
+def records(request):
+  if request.method == 'POST':
+    try:
+      credentials = request.data
+      user = User.objects.get(username=credentials["username"])
+      serialized_user = UserSerializer(user)
+      records = Record.objects.filter(user_id=user)
+      serialized_records = RecordSerializer(records, many=True)
+      return Response(data={"records": serialized_records.data, "message": "Records retrieved"}, status=status.HTTP_200_OK)
+    except:
+      return Response(data={"records": [], "message": "Unable to retrieve records"}, status=status.HTTP_400_BAD_REQUEST)
+  elif request.method == 'PUT':
+    try:
+      credentials = request.data
+      logging.warning(f'Credentials {credentials}')
+      user = User.objects.get(username=credentials["username"])
+      record = Record.objects.get(id=credentials["record"])
+      logging.warning(f"Record {record}")
+      serialized_record = RecordSerializer(record, data={"deleted": True}, partial=True)
+      if serialized_record.is_valid():
+        serialized_record.save()
+        return Response(status=status.HTTP_200_OK)
+      else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    except:
+      return Response(status=status.HTTP_404_NOT_FOUND)
+
 @api_view(['PUT'])
 def register(request):
   if request.method == 'PUT':
@@ -183,7 +212,7 @@ def register(request):
       serializer = UserSerializer(data=credentials)
       if serializer.is_valid():
         serializer.save()
-        return Response(data="Account created", status=status.HTTP_200_OK)
+        return Response(data="Account created", status=status.HTTP_201_CREATED)
       else:
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except:
