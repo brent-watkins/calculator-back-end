@@ -19,30 +19,6 @@ def _create_record(operation, result, user):
   else:
     logging.error(record.errors)
 
-
-@api_view(['POST', 'PUT'])
-def balance(request):
-  if request.method == 'POST':
-    try:
-      credentials = request.data
-      user = User.objects.get(username=credentials["username"])
-      serialized_user = UserSerializer(user)
-      return Response(data=serialized_user.data["balance"], status=status.HTTP_200_OK)
-    except:
-      return Response(data="Unable to show balance", status=status.HTTP_400_BAD_REQUEST)
-  if request.method == 'PUT':
-    try:
-      credentials = request.data
-      user = User.objects.get(username=credentials["username"])
-      serialized_user = UserSerializer(user, data={"balance": credentials["balance"]}, partial=True)
-      if serialized_user.is_valid():
-        serialized_user.save()
-        return Response(status=status.HTTP_200_OK)
-      else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-    except:
-      return Response(status=status.HTTP_400_BAD_REQUEST)
-
 @api_view(['POST'])
 # @authentication_classes([BasicAuthentication])
 # @permission_classes([IsAuthenticated])
@@ -71,6 +47,28 @@ def add(request):
     except:
       return Response(data="Invalid request", status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST', 'PUT'])
+def balance(request):
+  if request.method == 'POST':
+    try:
+      credentials = request.data
+      user = User.objects.get(username=credentials["username"])
+      serialized_user = UserSerializer(user)
+      return Response(data=serialized_user.data["balance"], status=status.HTTP_200_OK)
+    except:
+      return Response(data="Unable to show balance", status=status.HTTP_400_BAD_REQUEST)
+  if request.method == 'PUT':
+    try:
+      credentials = request.data
+      user = User.objects.get(username=credentials["username"])
+      serialized_user = UserSerializer(user, data={"balance": credentials["balance"]}, partial=True)
+      if serialized_user.is_valid():
+        serialized_user.save()
+        return Response(status=status.HTTP_200_OK)
+      else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    except:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 # @authentication_classes([BasicAuthentication])
