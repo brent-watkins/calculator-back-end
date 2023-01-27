@@ -326,3 +326,12 @@ The request body must include the following:
 ```
 
 The response will be the sum of all operands, having a type of `Number` or `float`
+
+## Testing
+
+To run tests, navigate to the directory with `manage.py`.
+From this directory enter the following command into a command prompt / bash:
+
+```sh
+python manage.py test
+```
