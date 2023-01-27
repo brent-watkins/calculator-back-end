@@ -98,10 +98,10 @@ def login(request):
     try:
       credentials = request.data
       user = User.objects.get(username=credentials["username"], password=credentials["password"])
-      serialized_user = UserSerializer(user, data={"status", User.ACTIVE}, partial=True)
-      if serialized_user.is_valid():
-        serialized_user.save()
-      return Response(data=serialized_user.data["username"], status=status.HTTP_200_OK)
+      # serialized_user = UserSerializer(user, data={"status", User.ACTIVE}, partial=True)
+      # if serialized_user.is_valid():
+      #   serialized_user.save()
+      return Response(data=user.username, status=status.HTTP_200_OK)
     except:
       return Response(data="Log in attempt failed", status=status.HTTP_400_BAD_REQUEST)
 
@@ -111,10 +111,10 @@ def logout(request):
     try:
       credentials = request.data
       user = User.objects.get(username=credentials["username"])
-      serialized_user = UserSerializer(user, data={"status", User.INACTIVE}, partial=True)
-      if serialized_user.is_valid():
-        serialized_user.save()
-      return Response(data=serialized_user.data["username"], status=status.HTTP_200_OK)
+      # serialized_user = UserSerializer(user, data={"status", User.INACTIVE}, partial=True)
+      # if serialized_user.is_valid():
+      #   serialized_user.save()
+      return Response(data=user.username, status=status.HTTP_200_OK)
     except:
       return Response(data="An error occurred while attempting to log out. You may still be logged in.", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
