@@ -20,7 +20,7 @@ def _create_record(operation, result, user):
     logging.error(record.errors)
 
 
-@api_view(['POST'])
+@api_view(['POST', 'PUT'])
 def balance(request):
   if request.method == 'POST':
     try:
@@ -30,6 +30,18 @@ def balance(request):
       return Response(data=serialized_user.data["balance"], status=status.HTTP_200_OK)
     except:
       return Response(data="Unable to show balance", status=status.HTTP_400_BAD_REQUEST)
+  if request.method == 'PUT':
+    try:
+      credentials = request.data
+      user = User.objects.get(username=credentials["username"])
+      serialized_user = UserSerializer(user, data={"balance": credentials["balance"]}, partial=True)
+      if serialized_user.is_valid():
+        serialized_user.save()
+        return Response(status=status.HTTP_200_OK)
+      else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+    except:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 # @authentication_classes([BasicAuthentication])
