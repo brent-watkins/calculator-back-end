@@ -42,14 +42,14 @@ def add(request):
       operation = Operation(type=Operation.ADDITION)
       operation.save()
       if user.balance >= operation.cost:
+        operands = [float(num) for num in request.data["operands"]]
+        result = sum(operands)
         balance = user.balance
         cost = operation.cost
         new_balance = float(balance) - float(cost)
         updated_user = UserSerializer(user, data={"balance": new_balance}, partial=True)
         if updated_user.is_valid():
           updated_user.save()
-        operands = [float(num) for num in request.data["operands"]]
-        result = sum(operands)
         _create_record(operation, result, user)
         return Response(data=result, status=status.HTTP_200_OK)
       else:
@@ -71,16 +71,16 @@ def divide(request):
       operation = Operation(type=Operation.DIVISION)
       operation.save()
       if user.balance >= operation.cost:
+        operands = [float(num) for num in request.data["operands"]]
+        result = operands[0]
+        for i in range(1, len(operands)):
+          result = result / operands[i]
         balance = user.balance
         cost = operation.cost
         new_balance = float(balance) - float(cost)
         updated_user = UserSerializer(user, data={"balance": new_balance}, partial=True)
         if updated_user.is_valid():
           updated_user.save()
-        operands = [float(num) for num in request.data["operands"]]
-        result = operands[0]
-        for i in range(1, len(operands)):
-          result = result / operands[i]
         _create_record(operation, result, user)
         return Response(data=result, status=status.HTTP_200_OK)
       else:
@@ -129,16 +129,16 @@ def multiply(request):
       operation = Operation(type=Operation.MULTIPLICATION)
       operation.save()
       if user.balance >= operation.cost:
+        operands = [float(num) for num in request.data["operands"]]
+        result = operands[0]
+        for i in range(1, len(operands)):
+          result = result * operands[i]
         balance = user.balance
         cost = operation.cost
         new_balance = float(balance) - float(cost)
         updated_user = UserSerializer(user, data={"balance": new_balance}, partial=True)
         if updated_user.is_valid():
           updated_user.save()
-        operands = [float(num) for num in request.data["operands"]]
-        result = operands[0]
-        for i in range(1, len(operands)):
-          result = result * operands[i]
         _create_record(operation, result, user)
         return Response(data=result, status=status.HTTP_200_OK)
       else:
@@ -161,13 +161,13 @@ def random_string(request):
       operation = Operation(type=Operation.RANDOM_STRING)
       operation.save()
       if user.balance >= operation.cost:
+        result = requests.get('https://www.random.org/strings/?num=1&len=20&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new')
         balance = user.balance
         cost = operation.cost
         new_balance = float(balance) - float(cost)
         updated_user = UserSerializer(user, data={"balance": new_balance}, partial=True)
         if updated_user.is_valid():
           updated_user.save()
-        result = requests.get('https://www.random.org/strings/?num=1&len=20&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new')
         _create_record(operation, result, user)
         return Response(data=result.text, status=status.HTTP_200_OK)
       else:
@@ -182,7 +182,6 @@ def records(request):
     try:
       credentials = request.data
       user = User.objects.get(username=credentials["username"])
-      serialized_user = UserSerializer(user)
       records = Record.objects.filter(user_id=user)
       serialized_records = RecordSerializer(records, many=True)
       return Response(data={"records": serialized_records.data, "message": "Records retrieved"}, status=status.HTTP_200_OK)
@@ -191,10 +190,8 @@ def records(request):
   elif request.method == 'PUT':
     try:
       credentials = request.data
-      logging.warning(f'Credentials {credentials}')
       user = User.objects.get(username=credentials["username"])
       record = Record.objects.get(id=credentials["record"])
-      logging.warning(f"Record {record}")
       serialized_record = RecordSerializer(record, data={"deleted": True}, partial=True)
       if serialized_record.is_valid():
         serialized_record.save()
@@ -229,14 +226,14 @@ def square_root(request):
       operation = Operation(type=Operation.SQUARE_ROOT)
       operation.save()
       if user.balance >= operation.cost:
+        operand = float(request.data["operands"][0])
+        result = math.sqrt(operand)
         balance = user.balance
         cost = operation.cost
         new_balance = float(balance) - float(cost)
         updated_user = UserSerializer(user, data={"balance": new_balance}, partial=True)
         if updated_user.is_valid():
           updated_user.save()
-        operand = float(request.data["operands"][0])
-        result = math.sqrt(operand)
         _create_record(operation, result, user)
         return Response(data=result, status=status.HTTP_200_OK)
       else:
@@ -257,16 +254,16 @@ def subtract(request):
       operation = Operation(type=Operation.SUBTRACTION)
       operation.save()
       if user.balance >= operation.cost:
+        operands = [float(num) for num in request.data["operands"]]
+        result = operands[0]
+        for i in range(1, len(operands)):
+          result = result - operands[i]
         balance = user.balance
         cost = operation.cost
         new_balance = float(balance) - float(cost)
         updated_user = UserSerializer(user, data={"balance": new_balance}, partial=True)
         if updated_user.is_valid():
           updated_user.save()
-        operands = [float(num) for num in request.data["operands"]]
-        result = operands[0]
-        for i in range(1, len(operands)):
-          result = result - operands[i]
         _create_record(operation, result, user)
         return Response(data=result, status=status.HTTP_200_OK)
       else:
